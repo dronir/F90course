@@ -1,4 +1,4 @@
-EXERCISES=Exercise1
+EXERCISES=Exercise1 Exercise2
 
 all:
 	make -C $(EXERCISES)
