@@ -11,4 +11,4 @@ part%:
 	gfortran $(FLAGS) -o $@ $(BASE)_$@.f90
 
 clean:
-	rm -v part*
+	rm -f part*
