@@ -6,22 +6,25 @@ program Exercise2_2
     read(*,*) a
     write(*,*) "Give end of first interval"
     read(*,*) b
+    write(*,*)
     
     result = solve(a, b)
     
-    
     write(*,*) "Final results:"
-    write(*,*) "x =", result
-    write(*,*) "y =", f(result)
+    write(*,*) "  x  =", result
+    write(*,*) "f(x) =", f(result)
 
-    stop
     
 contains
+    ! Solver function
     real function solve(a, b)
         real a, b, eps
         real y1, y2, xm, ym
+        integer i
         eps = 1e-7
+        i = 0
         do
+            i = i + 1
             y1 = f(a)
             y2 = f(b)
             xm = (a+b)/2
@@ -33,9 +36,11 @@ contains
             end if
             if (abs(a-b) < eps) exit
         end do
+        write(*,'(A,E8.2,A,I3)') "Convergence within ", eps, " at step ", i
         solve = a
     end function
     
+    ! Function to be solved
     real function f(x)
         real x
         f = x - log(x) - 2.0
