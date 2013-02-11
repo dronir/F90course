@@ -1,3 +1,4 @@
+! Solve equation system with Jacobian iteration
 program Exercise1_part3
     integer, parameter :: n = 4
     real, parameter :: epsilon = 1e-6
@@ -6,8 +7,9 @@ program Exercise1_part3
     real :: M(n), A(n,n), x(n), b(n), y(n)
     real :: delta, s
     
-    ! Matriisi, jossa diagonaaleille lisätty 10.
-    ! Alkuperäisen matriisin kanssa iteraatio divergoi
+    ! Matrix with +10 on the diagonal.
+    ! With the original matrix the iteration below
+    ! does not converge.
     A(:,1) = (/ 11, 2, 3, 4 /)
     A(:,2) = (/ 1, 13, 1, 2 /)
     A(:,3) = (/ 2, 1, 11, 1 /)
