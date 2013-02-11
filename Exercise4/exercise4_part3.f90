@@ -10,10 +10,10 @@ program Exercise1_part3
     ! Matrix with +10 on the diagonal.
     ! With the original matrix the iteration below
     ! does not converge.
-    A(:,1) = (/ 11, 2, 3, 4 /)
-    A(:,2) = (/ 1, 13, 1, 2 /)
-    A(:,3) = (/ 2, 1, 11, 1 /)
-    A(:,4) = (/ 3, 1, 0, 11 /)
+    A(1,:) = (/ 11, 2, 3, 4 /)
+    A(2,:) = (/ 1, 13, 1, 2 /)
+    A(3,:) = (/ 2, 1, 11, 1 /)
+    A(4,:) = (/ 3, 1, 0, 11 /)
     b = (/ 20, 11, 6, 4 /)
     
     x = 0.0
