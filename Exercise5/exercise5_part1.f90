@@ -9,6 +9,7 @@ program Exercise5_part1
     
 contains
     function inverse(Matrix)
+        ! Compute inverse by solving A*x_j = e_i for all rows
         real :: Matrix(:,:)
         real :: inverse(size(Matrix,1), size(Matrix,1)) ! Why didn't inverse(size(M)) work?
         integer :: N, row
@@ -19,7 +20,9 @@ contains
         end do
     end function
     
+    
     function rowsolve(Matrix,row)
+        ! Solve A*x = e_i for given A and row with Gaussian elimination
         integer :: i, N, k, pivot, j, row
         real :: Matrix(:,:)
         real :: rowsolve(size(Matrix,1))
