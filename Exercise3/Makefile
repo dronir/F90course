@@ -3,7 +3,7 @@
 FLAGS=-Wall -pedantic -O2 -fimplicit-none -std=f95
 
 BASE=exercise3
-PARTS = part1
+PARTS = part1 part2 part3 part4
 
 default all: $(PARTS)
 
