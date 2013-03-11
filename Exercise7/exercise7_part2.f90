@@ -1,12 +1,14 @@
-program Exercise8_part2
+program Exercise7_part2
     integer :: n
     real :: S
     real, parameter :: pi = 3.141592653
     real, external :: f
     
-    do n = 0,10
+    write(*,*)
+    write(*,*) "    Nsteps    Integral         Difference"
+    do n = 0,8
         S = trapezoid(f, 0.0, pi/2, 2**n)
-        write(*,*) 2**n, S
+        write(*,*) 2**n, S, (1-S)
     end do 
 
 contains
