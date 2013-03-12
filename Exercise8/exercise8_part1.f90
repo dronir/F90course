@@ -1,28 +1,25 @@
 ! Compute the volume of an n-dimensional unit sphere
 ! through Monte-Carlo.
 program Exercise8_part1
-    real :: v_cube, v_sphere, r
+    real :: v_sphere, r
     integer :: i, N, count
-    integer, parameter :: dim = 3
+    integer, parameter :: dim = 5
     real, dimension(dim) :: point
     
     N = 1000000
     count = 0
-    
-    v_cube = 2.0**dim
-    
+
     ! Generate points in a cube and count those which
     ! are inside the unit sphere.
     do i = 1,N
         call random_number(point)
-        point = 2.0 * (point - 0.5)
         r = norm(point)
         if (r .lt. 1.0) then
             count = count + 1
         end if
     end do
     
-    v_sphere = v_cube * count / N
+    v_sphere = 2.0**dim * count / N
     
     write(6,*) "  Dimension:", dim
     write(6,*) "     Nsteps:", N
