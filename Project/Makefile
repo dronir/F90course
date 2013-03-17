@@ -25,8 +25,8 @@ DDEPS = $(addprefix $(OBJDIR)/,$(DEPS))
 # By default, we build just the code, not the report
 default: code
 
-# "Everything" means all the executables given and the report
-.phony all: $(EXECUTABLES) $(REPORT)
+# "All" means all the executables and the report
+.phony all: code report
 
 # "Code" means just the executables, not the report
 .phony code: $(EXECUTABLES)
@@ -51,6 +51,8 @@ $(OBJDIR):
 $(REPORT): $(TEXDIR)/report.tex
 	$(TEX) $(TEXFLAGS) $^ >/dev/null
 	mv $(TEXDIR)/$(REPORT) .
+
+.phony report: $(REPORT)
 
 # Rule to clean up everything
 .phony clean:
