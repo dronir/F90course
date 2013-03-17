@@ -72,6 +72,50 @@ contains
         end select
     end function
     
+    ! Generic mean
+    real function mean(dist)
+        type(Distribution), intent(in) :: dist
+        select case (dist%kind)
+        case(DIST_UNIFORM)
+            mean = meanUnif(dist%a,dist%b)
+        case(DIST_NORMAL)
+            mean = dist%a
+        case(DIST_CHISQ)
+            mean = dist%a
+        case default
+            mean = 0.0
+        end select
+    end function
+    
+    ! Generic std
+    real function std(dist)
+        type(Distribution), intent(in) :: dist
+        select case (dist%kind)
+        case(DIST_UNIFORM)
+            std = stdUnif(dist%a,dist%b)
+        case(DIST_NORMAL)
+            std = dist%b
+        case(DIST_CHISQ)
+            std = sqrt(2*dist%a)
+        case default
+            std = 0.0
+        end select
+    end function
+    
+    ! Generic median
+    real function median(dist)
+        type(Distribution), intent(in) :: dist
+        select case (dist%kind)
+        case(DIST_UNIFORM)
+            median = meanUnif(dist%a,dist%b)
+        case(DIST_NORMAL)
+            median = dist%a
+        case(DIST_CHISQ)
+            median = medianChiSq(dist%a)
+        case default
+            median = 0.0
+        end select
+    end function
     
 
 

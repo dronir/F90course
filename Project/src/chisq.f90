@@ -28,5 +28,11 @@ contains
         end if
     end function
     
+    ! approximation for ChiSq median
+    real function medianChiSq(k) result (y)
+        real, intent(in) :: k
+        y = k * (1 - 2 / (9*k))**3
+    end function
+    
     
 end module
