@@ -1,8 +1,9 @@
 
 # Fortran course project: probability distributions
 
-Run `make` to build the project code (modules and test program).
+The project can be built automatically using GNU Make:
 
-TODO: Run `make report` to build report with pdfLaTeX.
-
-Run `make clean` to reset everything.
+- `make` builds the project code (modules and test program).
+- `make report` builds report with pdfLaTeX.
+- `make all` builds both the code and the report.
+- `make clean` resets everything.

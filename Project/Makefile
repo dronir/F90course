@@ -5,6 +5,13 @@ OBJDIR=objects
 SOURCEDIR=src
 EXECUTABLES=tests.x
 
+# Set up report compiling stuff. This allows one to either
+# use pdflatex to make a pdf, or latex to make a dvi.
+REPORT=report.pdf
+TEX=pdflatex
+TEXDIR=tex
+TEXFLAGS=-output-directory $(TEXDIR) -halt-on-error
+
 # Set up compiler and compilation flags
 FC=gfortran
 FFLAGS=-Wall -pedantic -O2 -fimplicit-none -std=f95 -J $(OBJDIR)
@@ -15,11 +22,14 @@ DEPS=utility.o normal.o uniform.o chisq.o
 # Add the proper directory path to the dependencies
 DDEPS = $(addprefix $(OBJDIR)/,$(DEPS))
 
-# By default, we build everything
-default: all
+# By default, we build just the code, not the report
+default: code
 
-# "Everything" means all the executables given
-.phony all: $(EXECUTABLES)
+# "Everything" means all the executables given and the report
+.phony all: $(EXECUTABLES) $(REPORT)
+
+# "Code" means just the executables, not the report
+.phony code: $(EXECUTABLES)
 
 # Rule to build an executable, depending on distributions.o
 %.x: $(SOURCEDIR)/%.f90 $(OBJDIR)/distributions.o $(DDEPS)
@@ -37,7 +47,14 @@ $(OBJDIR)/%.o : $(SOURCEDIR)/%.f90 | $(OBJDIR)
 $(OBJDIR):
 	mkdir $(OBJDIR)
 
+# Rule to build the report
+$(REPORT): $(TEXDIR)/report.tex
+	$(TEX) $(TEXFLAGS) $^ >/dev/null
+	mv $(TEXDIR)/$(REPORT) .
+
 # Rule to clean up everything
 .phony clean:
 	rm -rf $(OBJDIR)
 	rm -rf $(EXECUTABLES)
+	rm -rf $(REPORT)
+	rm -rf $(TEXDIR)/*.aux $(TEXDIR)/*.log
