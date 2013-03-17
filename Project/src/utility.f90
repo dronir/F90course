@@ -9,7 +9,7 @@ module UtilityFunctions
     9.9843695780195716e-6, 1.5056327351493116e-7 /)
     
 contains
-    ! Compute Gamma function from the Lancoz approximation
+    ! Gamma function from the Lancoz approximation
     recursive function gamma(z) result (gam)
         real :: gam
         real, intent(in) :: z
@@ -29,23 +29,25 @@ contains
         end if
     end function
     
+    ! Lower incomplete gamma function, series expression
     real function lgamma(s, z) result (res)
         real, intent(in) :: s, z
         real :: term
         integer :: k
         res = 0.0
         do k = 0,30
-            term = (-1.0)**k / frac(k)
+            term = (-1.0)**k / fact(k)
             term = term * z**(s + k) / (s + k)
             res = res + term
         end do
     end function
     
-    integer function frac(n)
+    ! Factorial function
+    integer function fact(n)
         integer :: i, n
-        frac = 1
+        fact = 1
         do i = n,1,-1
-            frac = frac * i
+            fact = fact * i
         end do
     end function
     
