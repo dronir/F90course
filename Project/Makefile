@@ -10,16 +10,19 @@ FC=gfortran
 FFLAGS=-Wall -pedantic -O2 -fimplicit-none -std=f95 -J $(OBJDIR)
 
 # List the dependencies of distributions.o
-DEPS=utility.o
+DEPS=utility.o normal.o uniform.o chisq.o
 
-# Add directory path to dependencies
+# Add the proper directory path to the dependencies
 DDEPS = $(addprefix $(OBJDIR)/,$(DEPS))
 
-# By default, we build all given executables
-default all: $(EXECUTABLES)
+# By default, we build everything
+default: all
+
+# "Everything" means all the executables given
+.phony all: $(EXECUTABLES)
 
 # Rule to build an executable, depending on distributions.o
-%.x: $(SOURCEDIR)/%.f90 $(OBJDIR)/distributions.o
+%.x: $(SOURCEDIR)/%.f90 $(OBJDIR)/distributions.o $(DDEPS)
 	$(FC) $(FFLAGS) -o $@ $^
 
 # Rule to compile distributions.o, depending on the other deps
@@ -35,6 +38,6 @@ $(OBJDIR):
 	mkdir $(OBJDIR)
 
 # Rule to clean up everything
-.PHONY clean:
-	rm -rf $(EXENAME)
+.phony clean:
 	rm -rf $(OBJDIR)
+	rm -rf $(EXECUTABLES)

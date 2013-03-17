@@ -1,4 +1,9 @@
 module Distributions
+    use UtilityFunctions
+    use ModUniform
+    use ModNormal
+    use ModChiSq
+    
     integer, parameter :: DIST_UNIFORM = 0
     integer, parameter :: DIST_NORMAL = 1
     integer, parameter :: DIST_CHISQ = 2
@@ -39,40 +44,21 @@ contains
     real function Pdf(dist, x)
         real, intent(in) :: x
         type(Distribution), intent(in) :: dist
-
         select case (dist%kind)
-        case(0)
-            P = pdfUnif(dist%a, dist%b)
-        case(1)
-            P = pdfNorm(x, dist%a, dist%b)
+        case(DIST_UNIFORM)
+            Pdf = pdfUnif(x, dist%a, dist%b)
+        case(DIST_NORMAL)
+            Pdf = pdfNorm(x, dist%a, dist%b)
+        case(DIST_CHISQ)
+            Pdf = pdfChiSq(x, dist%a)
         case default
-            P = 0.0 
+            Pdf = 0.0 
         end select
+    end function
+    
+    
 
-    end function
-    
-    
-    ! Probability distribution function for uniform distribution
-    ! This would be simple to just inline in the P(dist,x) function,
-    ! but written out for completeness.
-    real function pdfUnif(a,b)
-        real, intent(in) :: a, b
-        pdfUnif = 1.0 / (b-a)
-    end function
-    
-    ! Cumulative distribution function for uniform distribution
-    real function cdfUnif(x,a,b)
-        real, intent(in) :: x,a,b
-        cdfUnif = min(max((x-a) / (b-a), 0.0), 1.0)
-    end function
-    
-    ! Probability distribution function for normal distribution
-    real function pdfNorm(x,a,b)
-        real, intent(in) :: x,a,b
-        pdfNorm = min(max((x-a) / (b-a), 0.0), 1.0)
-    end function
-    
-    ! Cumulative distribution function for normal distribution
-!    real 
+
+
     
 end module
