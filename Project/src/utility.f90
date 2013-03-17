@@ -29,4 +29,24 @@ contains
         end if
     end function
     
+    real function lgamma(s, z) result (res)
+        real, intent(in) :: s, z
+        real :: term
+        integer :: k
+        res = 0.0
+        do k = 0,30
+            term = (-1.0)**k / frac(k)
+            term = term * z**(s + k) / (s + k)
+            res = res + term
+        end do
+    end function
+    
+    integer function frac(n)
+        integer :: i, n
+        frac = 1
+        do i = n,1,-1
+            frac = frac * i
+        end do
+    end function
+    
 end module
