@@ -1,15 +1,26 @@
 # Makefile for course project
 
-FLAGS=-Wall -pedantic -O2 -fimplicit-none -std=f95
+# Where to put object files
+OBJDIR=objects
+SOURCEDIR=src
+DEPS=distributions.o
 
-BASE=exercise8
-DEPS=
+FC=gfortran
+FFLAGS=-Wall -pedantic -O2 -fimplicit-none -std=f95 -J $(OBJDIR)
 
-default all: project
+DDEPS = $(addprefix $(OBJDIR)/,$(DEPS))
 
-project:
-	gfortran $(FLAGS) -o project.x project.f90 $(DEPS)
+default all: tests
+
+objectdir:
+	mkdir $(OBJDIR)
+
+tests: $(DDEPS)
+	$(FC) $(FFLAGS) -o tests.x $(SOURCEDIR)/tests.f90 $(DDEPS)
+
+$(OBJDIR)/%.o : $(SOURCEDIR)/%.f90 | objectdir
+	$(FC) $(FFLAGS) -c $< -o $@
 
 clean:
 	rm -rf project.x
-	rm -rf *.o
+	rm -rf $(OBJDIR)
