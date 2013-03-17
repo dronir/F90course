@@ -48,11 +48,27 @@ contains
         case(DIST_UNIFORM)
             Pdf = pdfUnif(x, dist%a, dist%b)
         case(DIST_NORMAL)
-            Pdf = pdfNorm(x, dist%a, dist%b)
+            Pdf = pdfNormal(x, dist%a, dist%b)
         case(DIST_CHISQ)
             Pdf = pdfChiSq(x, dist%a)
         case default
-            Pdf = 0.0 
+            Pdf = 0.0
+        end select
+    end function
+    
+    ! Generic cumulative distribution function
+    real function Cdf(dist, x)
+        real, intent(in) :: x
+        type(Distribution), intent(in) :: dist
+        select case (dist%kind)
+        case(DIST_UNIFORM)
+            Cdf = cdfUnif(x, dist%a, dist%b)
+        case(DIST_NORMAL)
+            Cdf = cdfNormal(x, dist%a, dist%b)
+        case(DIST_CHISQ)
+            Cdf = cdfChiSq(x, dist%a)
+        case default
+            Cdf = 0.0
         end select
     end function
     
