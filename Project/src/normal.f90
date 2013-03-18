@@ -6,8 +6,7 @@ contains
 ! Probability distribution function for normal distribution
 real function pdfNormal(x,mu,sigma)
     real, intent(in) :: x,mu,sigma
-    pdfNormal = 1.0 / (sqrt(2*pi) * sigma)
-    pdfNormal = pdfNormal * exp(-(x-mu)**2 / (2 * sigma**2))
+    pdfNormal = exp(-(x-mu)**2 / (2 * sigma**2)) / (sqrt(2*pi) * sigma)
 end function
 
 ! Cumulative distribution function for normal distribution
