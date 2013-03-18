@@ -5,35 +5,45 @@ program DistributionTests
     integer :: i
     real :: d, x, trueP, trueC
     
+    test1 = Uniform(0.0, 2.0)
     write(6,*)
-    write(6,*) "Testing U(-1, 1) distribution"
+    write(6,*) "Testing U(0,2) distribution"
     write(6,*) "============================="
+    write(6,*) "mean:", mean(test1)
+    write(6,*) "median:", median(test1)
+    write(6,*) "std:", std(test1)
     write(6,*) "       x               pdf              cdf"
-    test1 = Uniform(-1.0, 1.0)
-    do i = 0,21
-        d = (i/21.0)
-        x = 3*d - 1.5
+    do i = 0,10
+        d = (i/10.0)
+        x = 3*d -0.5
         write(6,*) x, Pdf(test1, x), Cdf(test1,x)
     end do
 
-    write(6,*)
-    write(6,*) "Testing N(0, 1) distribution"
-    write(6,*) "============================="
-    write(6,*) "       x               pdf              cdf"
     test2 = Normal(0.0, 1.0)
-    do i = 0,21
-        d = (i/21.0)
+    write(6,*)
+    write(6,*) "Testing N(0,1) distribution"
+    write(6,*) "============================="
+    write(6,*) "mean:", mean(test2)
+    write(6,*) "median:", median(test2)
+    write(6,*) "std:", std(test2)
+    write(6,*) "       x               pdf           true pdf            cdf"
+    do i = 0,10
+        d = (i/10.0)
         x = 3*d - 1.5
-        write(6,*) x, Pdf(test2, x), Cdf(test2,x)
+        trueP = exp(-x**2 / 2) / sqrt(2*pi)
+        write(6,*) x, Pdf(test2, x), trueP, Cdf(test2,x)
     end do
 
+    test3 = ChiSq(2)
     write(6,*)
     write(6,*) "Testing ChiSq(2) distribution"
     write(6,*) "============================="
+    write(6,*) "mean:", mean(test3)
+    write(6,*) "median:", median(test3)
+    write(6,*) "std:", std(test3)
     write(6,*) "       x               pdf           true pdf            cdf            true cdf"
-    test3 = ChiSq(2)
-    do i = 0,21
-        d = (i/21.0)
+    do i = 0,10
+        d = (i/10.0)
         x = 3*d
         trueP = 0.5 * exp(-x/2)
         trueC = 1 - exp(-x/2)
