@@ -18,6 +18,10 @@ program DistributionTests
         x = 3*d -0.5
         write(6,*) x, Pdf(test1, x), Cdf(test1,x)
     end do
+    write(6,*)
+    write(6,*) "xCrit(0.25):", xCrit(test1, 0.25)
+    write(6,*) "xCrit(0.50):", xCrit(test1, 0.50)
+    write(6,*) "xCrit(0.75):", xCrit(test1, 0.75)
 
     test2 = Normal(0.0, 1.0)
     write(6,*)
@@ -33,6 +37,10 @@ program DistributionTests
         trueP = exp(-x**2 / 2) / sqrt(2*pi)
         write(6,*) x, Pdf(test2, x), trueP, Cdf(test2,x)
     end do
+    write(6,*)
+    write(6,*) "xCrit(0.25):", xCrit(test2, 0.25), "true (approx.): -0.674"
+    write(6,*) "xCrit(0.50):", xCrit(test2, 0.50), "true (exactly): 0.0)"
+    write(6,*) "xCrit(0.75):", xCrit(test2, 0.75), "true (approx.): 0.674"
 
     test3 = ChiSq(2)
     write(6,*)
@@ -49,6 +57,10 @@ program DistributionTests
         trueC = 1 - exp(-x/2)
         write(6,*) x, Pdf(test3, x), trueP, Cdf(test3,x), trueC
     end do
+    write(6,*)
+    write(6,*) "xCrit(0.25):", xCrit(test3, 0.25)
+    write(6,*) "xCrit(0.50):", xCrit(test3, 0.50)
+    write(6,*) "xCrit(0.75):", xCrit(test3, 0.75)
     
     write(6,*)
 end program

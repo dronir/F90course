@@ -117,6 +117,60 @@ contains
         end select
     end function
     
+    ! Find cdf critical p-value, i.e. the value of x
+    ! for which Cdf(x) = xCrit
+    real function xCrit(dist, pvalue)
+        type(Distribution), intent(in) :: dist
+        real, intent(in) :: pvalue
+        real :: a, b, half, phalf, error
+        select case (dist%kind)
+        case(DIST_UNIFORM)
+            ! Easy to do analytically for the uniform distribution
+            xCrit = pvalue*(dist%b - dist%a) + dist%a
+            return
+        case(DIST_NORMAL)
+            ! For the others, solve using binary search.
+            ! Set starting values based on distribution.
+            a = -1.0
+            b = 1.0
+        case(DIST_CHISQ)
+            a = 0.0
+            b = 1.0
+            xCrit = 0.0
+        case default
+            ! Default case, no real error handling for now.
+            xCrit = 0.0
+            return
+        end select
+
+        ! First ensure that the required point is
+        ! in the interval, by moving and stretching
+        ! the interval.
+        do while (Cdf(dist, a).gt.pvalue)
+            b = a
+            a = 2*a
+        end do
+        do while (Cdf(dist, b).lt.pvalue)
+            a = b
+            b = 2*b
+        end do
+
+        ! Then use binary search to find the value
+        error = 1.0
+        do while (error .gt. 1e-10)
+            half = (a+b)/2.0
+            phalf = Cdf(dist,half)
+            if (phalf.gt.pvalue) then
+                b = half
+            elseif (phalf.lt.pvalue) then
+                a = half
+            end if
+            error = abs(phalf-pvalue)
+        end do
+        
+        xCrit = half
+        
+    end function
 
 
 
