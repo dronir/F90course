@@ -50,6 +50,7 @@ $(OBJDIR):
 # Rule to build the report
 $(REPORT): $(TEXDIR)/report.tex | $(TEXDIR)/output
 	$(TEX) $(TEXFLAGS) $^ >/dev/null
+	$(TEX) $(TEXFLAGS) $^ >/dev/null
 	mv $(TEXDIR)/output/$(REPORT) .
 
 # Make tex output directory if it doesn't exist
