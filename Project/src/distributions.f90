@@ -77,7 +77,7 @@ contains
         type(Distribution), intent(in) :: dist
         select case (dist%kind)
         case(DIST_UNIFORM)
-            mean = meanUnif(dist%a,dist%b)
+            mean = (dist%a + dist%b)/2.0
         case(DIST_NORMAL)
             mean = dist%a
         case(DIST_CHISQ)
@@ -92,7 +92,7 @@ contains
         type(Distribution), intent(in) :: dist
         select case (dist%kind)
         case(DIST_UNIFORM)
-            std = stdUnif(dist%a,dist%b)
+            std = (dist%b - dist%a) / 3.464101615
         case(DIST_NORMAL)
             std = dist%b
         case(DIST_CHISQ)
@@ -107,7 +107,7 @@ contains
         type(Distribution), intent(in) :: dist
         select case (dist%kind)
         case(DIST_UNIFORM)
-            median = meanUnif(dist%a,dist%b)
+            median = (dist%a + dist%b)/2.0
         case(DIST_NORMAL)
             median = dist%a
         case(DIST_CHISQ)
