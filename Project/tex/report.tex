@@ -3,10 +3,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{amssymb, amsmath}
-
+\usepackage{verbatim}
 \usepackage{textcomp}
 \usepackage[english]{babel}
-\usepackage[pdftex]{color, graphicx}
 
 \title{Report for Numerical methods course}
 \author{Olli Wilkman}
@@ -14,6 +13,8 @@
 \begin{document}
 
 \maketitle
+
+\tableofcontents
 
 \section{Aim}
 
@@ -48,7 +49,7 @@ The module also contains the functions \verb+mean(dist)+, \verb+std(dist)+, \ver
 
 Additionally, the module contains the functions \verb+Pdf(dist,x)+ and \verb+Cdf(dist,x)+, which take a Distribution and return the values of the PDF or CDF at $x$. These functions all call the relevant functions in the distribution-specific modules.
 
-Finally, the module contains the function \verb+xCrit(dist,p)+, which computes the critical value for probability $p$. The implementation depends on the distribution kind. For the uniform distribution, the critical value is easy to compute analytically. For the normal and $\chi^2$ distributions, the value is computed using binary search on the CDF. This is not the optimal method for speed, but simple.
+Finally, the module contains the function \verb+xCrit(dist,p)+, which computes the critical value for probability $p$. The implementation depends on the distribution kind. For the uniform distribution, the critical value is easy to compute analytically. For the normal and $\chi^2$ distributions, the value is computed using binary search on the CDF. This is not the optimal method for speed, but it was simple to implement.
 
 \subsection{tests.f90}
 
@@ -132,5 +133,38 @@ The functions implemented here are the factorial, the Gamma function (using the 
 \subsection{Makefile}
 
 To simplify the process of compiling and building the code, I wrote a Makefile for GNU Make which automates the process. The Makefile can be used to build both the test executable (with all the modules it depends on) with the command \verb+make code+ (or just \verb+make+), this report using \LaTeX~with \verb+make report+ or both with \verb+make all+. The command \verb+make clean+ resets everything to a clean state.
+
+\section{Quick usage guide}
+
+Let's say we want to compare two normal distributions, $X \sim N(0, 3)$ and $Y \sim N(1, 4)$ and find out the value of the CDF of $Y$ at the $p=0.75$ critical point of $X$.
+
+A short program to compute the result is shown as Figure 1. On the second line, we bring in the contents of the Distributions module. On the next lines we define two Distribution type variables and two real variables for the results.
+
+On the next two lines we define the two Distribution variables as our $N(0,3)$ and $N(1,4)$ distributions.
+
+On the following line, we compute the critical value $x_{0.75}$ of $X$, and on the line after this, we compute the CDF of $Y$ at that point. The last lines just print the results.
+
+\begin{figure}
+\begin{verbatim}
+program CompareDistributions
+use Distributions
+
+type(Distribution) :: distX, distY
+real :: x, result
+
+distX = Normal(0,3)
+distY = Normal(1,4)
+
+x = xCrit(distX, 0.75)
+result = CDF(distY, x)
+
+write(*,*) "xCrit:", x
+write(*,*) "CDF(Y):", result
+
+end program
+
+\end{verbatim}
+\caption{Example program.}
+\end{figure}
 
 \end{document}
