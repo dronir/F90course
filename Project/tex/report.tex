@@ -12,6 +12,125 @@
 \author{Olli Wilkman}
 
 \begin{document}
-    \maketitle
-    
+
+\maketitle
+
+\section{Aim}
+
+The aims given in the project topic were the following features for the uniform, normal and $\chi^2$ probability distributions:
+
+\begin{enumerate}
+    \item Compute the probability density function $p(X)$ (PDF).
+    \item Compute the cumulative density function $P(x)$ (CDF).
+    \item Comptue the critical value $x_\alpha$, for which $P(x_\alpha) > \alpha$.
+\end{enumerate}
+
+Additionally, I decided to write functions to compute the main statistical variables for the distributions: the mean, standard deviation and median.
+
+
+\section{Code organization}
+
+\subsection{distributions.f90}
+
+The module Distributions is the core of this distributions package. It depends on the ModUniform, ModNormal and ModChiSq modules.
+
+The module defines a type called \verb+Distribution+, represeting a general probability distribution. The type contains an integer field defining the kind of the distribution (uniform, normal or $\chi^2$), and two real fields for parametrizing the distribution.
+
+The module contains three ``constructor'' functions:
+
+\begin{description}
+    \item[Uniform(a,b)] returns a structure of the Distribution type, with the \emph{kind} field set to \verb+DIST_UNIFORM+, and the two parameter fields set to $a$ and $b$.
+    \item[Normal(mu,sigma)] returns a structure of the Distribution type, with the \emph{kind} field set to \verb+DIST_NORMAL+, and the two parameter fields set to the given $\mu$ and $\sigma$.
+    \item[ChiSq(k)] returns a structure of the Distribution type, with the \emph{kind} field set to \verb+DIST_CHISQ+, the first parameter field set to $k$ and the second to zero.
+\end{description}
+
+The module also contains the functions \verb+mean(dist)+, \verb+std(dist)+, \verb+median(dist)+, where \verb+dist+ is a value of the Distribution type. The functions return the corresponding values of the mean, standard deviation or median, based on the kind of the distribution, and its parameters. These either call a function defined in the module for the appropriate distribution (such as the median of the $\chi^2$ distribution), or compute the value in-line.
+
+Additionally, the module contains the functions \verb+Pdf(dist,x)+ and \verb+Cdf(dist,x)+, which take a Distribution and return the values of the PDF or CDF at $x$. These functions all call the relevant functions in the distribution-specific modules.
+
+Finally, the module contains the function \verb+xCrit(dist,p)+, which computes the critical value for probability $p$. The implementation depends on the distribution kind. For the uniform distribution, the critical value is easy to compute analytically. For the normal and $\chi^2$ distributions, the value is computed using binary search on the CDF. This is not the optimal method for speed, but simple.
+
+\subsection{tests.f90}
+
+The DistributionsTests program is the only executable in this project. It uses the Distributions module and runs a number of simple tests of the functions of the module, printing the output to terminal.
+
+\subsection{uniform.f90}
+
+Given $X \sim U(a,b)$, the PDF is defined as
+
+\begin{align}
+    p(x) = \left\{ \begin{array}{ll}
+        \frac{1}{b-a} & a \le x \le b \\
+        0, & \text{otherwise}
+    \end{array} \right.
+\end{align}
+
+and the CDF is obviously
+
+\begin{align}
+    P(x) = \left\{ \begin{array}{ll}
+        0, & x \le a \\
+        \frac{x-a}{b-a} & a \le x \le b \\
+        1, & x \ge b
+    \end{array} \right.
+\end{align}
+
+
+
+\subsection{normal.f90}
+
+The module ModNormal contains the functions to compute the PDF and CDF of the normal distribution.
+
+Given $X \sim N(\mu,\sigma)$, the PDF is
+
+\begin{align}
+    p(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(  -\frac{\left(x-\mu\right)^2}{2\sigma^2} \right)
+\end{align}
+
+The CDF of a normal distribution cannot be computed analytically, but can be approximated. The CDF of a standard normal distribution $Z = \frac{X-\mu}{\sigma} \sim N(0,1)$ (usually called $\Phi(x)$) can be approximated by
+
+\begin{align}
+    \Phi(x) &= 1 - \frac{1}{\sqrt{2\pi}} \exp \left(-\frac{x^2}{2}\right) \left( 0.4361836t - 0.1201676 t^2 + 0.9372980 t^3 \right)\\
+    t &= \left( 1 + 0.33267x \right)^{-1}.
+\end{align}
+
+Using this, the CDF of $X$ can be computed as $P(x) = \Phi(\frac{x-\mu}{\sigma})$.
+
+\subsection{chisq.f90}
+
+The ModChiSq module contains the functions for computing the PDF and CDF of the $\chi^2$ distribution, as well as the median. Given $X \sim \chi^2(k)$, the PDF is defined as
+
+\begin{align}
+    p(x) = \left\{ \begin{array}{ll}
+    \frac{1}{2^{\frac{k}{2}} \Gamma \left(\frac{k}{2} \right)} x^{\frac{k}{2} - 1} \exp{-\frac{x}{2}}, & x \ge 0 \\
+    0, & x < 0
+    \end{array} \right.
+\end{align}
+
+where $\Gamma(x)$ is the gamma function. The CDF is defined as 
+
+\begin{equation}
+    P(x) = \left\{ \begin{array}{ll}
+        \frac{1}{\Gamma \left(\frac{k}{2} \right)} \gamma\left(\frac{k}{2}, \frac{x}{2} \right), & x \ge 0 \\
+        0, & x<0
+    \end{array}\right.,
+\end{equation}
+
+where $\gamma(a,b)$ is the lower incomplete gamma function. The special functions are implemented separately in the UtilityFunction module (next section).
+
+Finally, the median was computed with the approximation
+\begin{align}
+ \text{median}(X) \approx k(1 - \frac{2}{9k})^3
+\end{align}
+
+\subsection{utility.f90}
+
+The UtilifyFunctions module contains functions which are needed by the computations of the distribution functions of the $\chi^2$ distribution.
+
+The functions implemented here are the factorial, the Gamma function (using the Lancoz approximation with $g=7$) and the lower incomplete Gamma function (computed through a series approximation).
+
+\subsection{Makefile}
+
+To simplify the process of compiling and building the code, I wrote a Makefile for GNU Make which automates the process. The Makefile can be used to build both the test executable (with all the modules it depends on) with the command \verb+make code+ (or just \verb+make+), this report using \LaTeX~with \verb+make report+ or both with \verb+make all+. The command \verb+make clean+ resets everything to a clean state.
+
 \end{document}
