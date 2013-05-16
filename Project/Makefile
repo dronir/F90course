@@ -10,7 +10,7 @@ EXECUTABLES=tests.x
 REPORT=report.pdf
 TEX=pdflatex
 TEXDIR=tex
-TEXFLAGS=-output-directory $(TEXDIR) -halt-on-error
+TEXFLAGS=-output-directory $(TEXDIR)/output -halt-on-error
 
 # Set up compiler and compilation flags
 FC=gfortran
@@ -20,7 +20,7 @@ FFLAGS=-Wall -pedantic -O2 -fimplicit-none -std=f95 -J $(OBJDIR)
 DEPS=utility.o normal.o uniform.o chisq.o
 
 # Add the proper directory path to the dependencies
-DDEPS = $(addprefix $(OBJDIR)/,$(DEPS))
+DDEPS = $(addprefix $(OBJDIR)/, $(DEPS))
 
 # By default, we build just the code, not the report
 default: code
@@ -48,10 +48,15 @@ $(OBJDIR):
 	mkdir $(OBJDIR)
 
 # Rule to build the report
-$(REPORT): $(TEXDIR)/report.tex
+$(REPORT): $(TEXDIR)/report.tex | $(TEXDIR)/output
 	$(TEX) $(TEXFLAGS) $^ >/dev/null
-	mv $(TEXDIR)/$(REPORT) .
+	mv $(TEXDIR)/output/$(REPORT) .
 
+# Make tex output directory if it doesn't exist
+$(TEXDIR)/output:
+	mkdir $(TEXDIR)/output
+
+# Phony target to build the report
 .phony report: $(REPORT)
 
 # Rule to clean up everything
@@ -59,4 +64,4 @@ $(REPORT): $(TEXDIR)/report.tex
 	rm -rf $(OBJDIR)
 	rm -rf $(EXECUTABLES)
 	rm -rf $(REPORT)
-	rm -rf $(TEXDIR)/*.aux $(TEXDIR)/*.log
+	rm -rf $(TEXDIR)/output
